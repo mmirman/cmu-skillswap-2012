@@ -7,3 +7,4 @@ $(makeHost "Client" "localhost" 9000)
 $(makeHost "ServerA" "localhost" 9001)
 
 main = do
+  putStrLn "hi"
