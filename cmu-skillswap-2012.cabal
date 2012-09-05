@@ -1,0 +1,23 @@
+name:                cmu-skillswap-2012
+version:             0.0.0.0
+synopsis:            A tutorial and associated filed to create a two node guess the number game, where there shall be NO PEAKING. 
+
+homepage:            http://github.com/mmirman/cmu-skillswap-2012
+license:             BSD3
+license-file:        LICENSE
+author:              Matthew Mirman
+maintainer:          mmirman@andrew.cmu.edu
+
+category:            Network, Web
+build-type:          Simple
+cabal-version:       >=1.8
+
+source-repository head
+  type:    git
+  location: git://github.com/mmirman/cmu-skillswap-2012.git
+
+executable GuessTheNumber
+  main-is: src/GuessTheNumber.hs
+  build-depends: rpc-framework, base >= 4.0
+  ghc-options: -threaded
+  extensions: TemplateHaskell, ScopedTypeVariables
