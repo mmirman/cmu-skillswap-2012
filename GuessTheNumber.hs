@@ -40,4 +40,3 @@ main = do
   runServerBG $(autoService 'Keeper)
   -- run the client as a forground process
   runServer guesserClient
-                
