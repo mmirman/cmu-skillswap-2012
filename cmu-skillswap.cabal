@@ -20,4 +20,4 @@ executable guesser
   main-is: GuessTheNumber.hs
   build-depends: rpc-framework, random, base >= 4.0
   ghc-options: -threaded
-  extensions: TemplateHaskell, ScopedTypeVariables
+  extensions: TemplateHaskell

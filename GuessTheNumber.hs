@@ -1,15 +1,16 @@
-{-# LANGUAGE TemplateHaskell, ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Main where
 
 import Network.Remote.RPC
 import GuessTheNumberSupport
+import System.Environment
 
+$(makeHost "Hider" "localhost" 9001)
 $(makeHost "Guesser" "localhost" 9000)
-$(makeHost "Keeper" "localhost" 9001)
 
 guesserClient = do
   onHost Guesser
-  guessingInstance <- $(rpcCall 'newKeeperInstanceServer)
+  guessingInstance <- $(rpcCall 'newGameServer)
                         
   repeateWhileTrue $ do 
     printLine "guess a number!"
@@ -27,16 +28,21 @@ guesserClient = do
   if answer 
     then guesserClient
     else printLine "thanks for playing."
-  
 
-newKeeperInstanceServer = do
-  onHost Keeper
+newGameServer = do
+  onHost Hider
   r <- newRandomInteger
   let numberGuesser(k) = compareTwo(k,r) 
-  return numberGuesser 
+  return numberGuesser
           
 main = do
-   -- find all services that should run on the host Keeper, and runs them on a background server
-  runServerBG $(autoService 'Keeper)
-  -- run the client as a forground process
-  runServer guesserClient
+  args <- getArgs
+  case args of 
+    ["-server"] -> runServer $(autoService 'Hider)
+    ["-client"] ->  runServer guesserClient
+    _ -> do
+      putStrLn "running both the client and the server. -server or -client"
+      -- find all services that should run on the host Keeper, and runs them on a background server
+      runServerBG $(autoService 'Hider)
+      -- run the client as a forground process
+      runServer guesserClient

@@ -22,3 +22,6 @@ repeateWhileTrue m = m'
           if b 
             then m' 
             else return ()
+
+
+setActionValue a = return a
