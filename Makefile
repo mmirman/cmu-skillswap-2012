@@ -1,7 +1,7 @@
 test : 
 	cabal configure
 	cabal build
-	cp dist/build/rpc-test/guesser .
+	cp dist/build/guesser/guesser .
 
 run : test
 	./guesser

@@ -1,7 +1,7 @@
 cmu-skillswap-2012
 ==================
 
-A tutorial and associated filed to create a two node guess the number game, where there shall be NO PEEKING. 
+A tutorial and associated files to create a two node guess the number game, where there shall be NO PEEKING. 
 
 
 Step 1

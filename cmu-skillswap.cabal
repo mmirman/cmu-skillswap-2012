@@ -1,6 +1,6 @@
 name:                cmu-skillswap
 version:             0.0.0.0
-synopsis:            A tutorial and associated filed to create a two node guess the number game, where there shall be NO PEAKING. 
+synopsis:            A tutorial and associated files to create a two node guess the number game, where there shall be NO PEAKING. 
 
 homepage:            http://github.com/mmirman/cmu-skillswap-2012
 license:             BSD3
@@ -8,7 +8,7 @@ license-file:        LICENSE
 author:              Matthew Mirman
 maintainer:          mmirman@andrew.cmu.edu
 
-category:            Network, Web
+category:            Network, Web, Tutorials
 build-type:          Simple
 cabal-version:       >=1.8
 
@@ -17,7 +17,6 @@ source-repository head
   location: git://github.com/mmirman/cmu-skillswap-2012.git
 
 executable guesser
-  hs-source-dirs: src
   main-is: GuessTheNumber.hs
   build-depends: rpc-framework, random, base >= 4.0
   ghc-options: -threaded
