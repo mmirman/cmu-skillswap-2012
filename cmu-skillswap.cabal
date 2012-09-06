@@ -1,4 +1,4 @@
-name:                cmu-skillswap-2012
+name:                cmu-skillswap
 version:             0.0.0.0
 synopsis:            A tutorial and associated filed to create a two node guess the number game, where there shall be NO PEAKING. 
 
@@ -16,8 +16,9 @@ source-repository head
   type:    git
   location: git://github.com/mmirman/cmu-skillswap-2012.git
 
-executable GuessTheNumber
-  main-is: src/GuessTheNumber.hs
-  build-depends: rpc-framework, base >= 4.0
+executable guesser
+  hs-source-dirs: src
+  main-is: GuessTheNumber.hs
+  build-depends: rpc-framework, random, base >= 4.0
   ghc-options: -threaded
   extensions: TemplateHaskell, ScopedTypeVariables
