@@ -39,7 +39,7 @@ main = do
   args <- getArgs
   case args of 
     ["-server"] -> runServer $(autoService 'Hider)
-    ["-client"] ->  runServer guesserClient
+    ["-client"] -> runServer guesserClient
     _ -> do
       putStrLn "running both the client and the server. -server or -client"
       -- find all services that should run on the host Keeper, and runs them on a background server
