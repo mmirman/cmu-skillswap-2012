@@ -4,6 +4,9 @@ import Network.Remote.RPC (lift, WIO)
 import Data.Int
 import System.Random
 
+
+bounds :: (Int8, Int8)
+bounds = (minBound, maxBound) 
 newRandomInteger :: WIO w IO Int8
 newRandomInteger = lift $ randomIO 
 

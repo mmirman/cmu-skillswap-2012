@@ -12,8 +12,8 @@ import Data.Functor
 $(makeHost "Keeper" "localhost" 9001) -- the server
 $(makeHost "Guesser" "localhost" 9000) -- the client
 
-newGameServer = do
-  onHost Keeper
+newGameServer = do 
+  onHost Keeper 
   flip compare <$> newRandomInteger
 
 guesserClient = do
@@ -21,7 +21,7 @@ guesserClient = do
   guessingInstance <- $(rpcCall 'newGameServer)
                         
   repeateWhileTrue $ do 
-    printLine "guess a number!"
+    printLine $ "guess a number! between " ++ minBound (1 :: Int8) ++ ", " ++ maxBound (1 :: Int8) 
     answer <- readLine
     result <- guessingInstance answer 
     case result of 
