@@ -5,7 +5,7 @@ module Main where
 import Network.Remote.RPC
 import GuessTheNumberSupport
 import System.Environment
-import GHC.Int
+
 -- Note 1:  Haskell is not a scripting language. 
 -- Like Java, the order of top level declaration does not matter.
 
@@ -29,27 +29,51 @@ $(makeHost "Guesser" "localhost" 9000) -- the client
 -- when newGameServer gets called, it returns a function representing 
 -- a new instance of the game!  The function it returns compares a guessed number against  
 -- the server's number.
-gameServer :: (Int8 -> WIO Keeper IO Ordering) -> WIO Keeper IO ()
-gameServer foo = do 
+newGameServer = do -- "do" is a keyword a bit like "{" but without a matching "}"
+  -- first we declare that this action was intended to run on the host "Keeper"
   onHost Keeper
-  let binarySearch(low,high) = do
-        let next = (low + high) `div` 2
-        was_correct <- foo next    
-        case was_correct of 
-          EQ -> printLine $ "yay! " ++ show next
-          LT -> binarySearch(next,high)
-          GT -> binarySearch(low,next)
-  binarySearch bounds
+  -- the next line assigns the new variable r to be a random Integer.
+  r <- newRandomInteger
+  -- numberGuesser is a closure.  It captures the variable r and uses it in a function 
+  -- which leaves the scope of this action.
+  let numberGuesser(k) = compareTwo(k,r)
+  -- while haskell has the word "return", it is just an ordinary function.  Rather than     
+  -- exiting the code block with the given value, "return" just sets the resulting value 
+  -- of the code block at this point to the given value.  In fact, every line in a "do"
+  -- block sets the resulting value of the code block at that point to "a" value, return just
+  -- lets you set it manually.
+  return numberGuesser
+  -- All three above lines can be written "flip compare <$> newRandomInteger" 
+  -- instead. Don't worry too much.
 
-guesserClient :: WIO Guesser IO ()
-guesserClient = do 
+guesserClient = do
   onHost Guesser
-  printLine "give me a number"
-  yournumber <- readLine 
-  $(rpcCall 'gameServer) $ \r -> compareTwo(r,yournumber)
+  
+  -- here we actually make a call to newGameServer to get an instance of the game.
+  -- the function never actually leaves the server, 
+  -- it just allows us to make calls to the server.
+  guessingInstance <- $(rpcCall 'newGameServer) 
+                        
+  repeateWhileTrue $ do 
+    printLine "guess a number!"
+    answer <- readLine -- haskell type infers what you type you want to read from the terminal
+    result <- guessingInstance( answer ) -- the parens here are unecessary.
+    case result of 
+      -- remember, we aren't exiting the action when we write "return", 
+      -- just saying that the do block in the while statement executed to true or false.
+      EQ -> return False  -- like break
+      LT -> do printLine "you guessed low.  guess again"
+               return True -- like continue
+      GT -> do printLine "you guessed high.  guess again"
+               return True -- like continue
+  
+  printLine "you guessed correctly! want to play again? Input \"True\" or \"False\""
+  answer <- readLine
+  if answer 
+    then guesserClient -- play again by calling recursivly.
+    else printLine "thanks for playing."
 
-
--- don't worry too much about what is going on in the main file.            
+-- This is the point that actually gets run.
 main = do
   args <- getArgs
   case args of 
